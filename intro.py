@@ -36,11 +36,8 @@ class Intro:
 		self.screen = gradient
 		self.duration = duration
 
-		#clear background
-		#self.screen.clear()
-
 		#knob image
-		img = pygame.image.load(img_path + 'knob2.png')
+		img = pygame.image.load(img_path + 'knob.png')
 		#img = pygame.transform.scale(img, (150, 150))
 
 		#plates

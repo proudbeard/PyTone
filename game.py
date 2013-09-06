@@ -1,7 +1,7 @@
 #!/usr/bin/env/python
 #-*- coding: utf-8 -*-
 """
-	topic:	PyTone Game
+	topic:	Pytones main scene.
 	os:		Mac OS X 10.7.5
 
 	author:	Mikael Svensson
@@ -36,7 +36,11 @@ import math
 
 
 class Game:
-	""" Calling run() will start the game.  """
+	""" The main game class. This deals with two oscillators, of which one is adjustable.
+		The diffrence between those frequencies are measured and compared to the wanted interval.
+		Margin of errors is given i cents.
+
+	 """
 	screen = None
 	center = None #screen center
 	instructions = None #instructions surface
@@ -99,13 +103,14 @@ class Game:
 		#self.initAudio()
 
 	def initGUI(self):
+		""" Inits the graphical components """
 
 		#clear background
 		self.screen.clear()
 		self.screen.draw()
 
 		#knob image
-		img = pygame.image.load(self.path + 'knob2.png')
+		img = pygame.image.load(self.path + 'knob.png')
 
 		#plates
 		self.plate = pygame.image.load(self.path + 'rust.png')
@@ -128,15 +133,12 @@ class Game:
 		arrow_img = pygame.image.load(self.path + 'arrow.png')
 		self.arrow = (arrow_img, (self.center[0] - arrow_img.get_width()/2, 104)) 
 
-		#interval surface
-		self.setIntervalText() # init interval text
-
 		#instructions, texts
 		instrs = ['UP', 'DOWN', 'FINE UP', 'FINE DOWN', 'PRESS ENTER TO CONFIRM']
 		font = pygame.font.Font(self.path + 'Actor-Regular.ttf', 10)
 
 		#instructions, key images
-		key_images = pygame.Surface((184, 69), pygame.SRCALPHA, 32) #w = 176
+		key_images = pygame.Surface((184, 69), pygame.SRCALPHA, 32) #collecting those images in a surface, for flexible positioning.
 		key_images_cp = key_images.get_rect().center
 
 		img = pygame.image.load(self.path + 'key.png')
@@ -160,9 +162,9 @@ class Game:
 
 
 	def initAudio(self):
-		""" Inits audio """
-		#guide tone
+		""" Inits the two oscillators and their channels. """
 
+		#guide tone
 		self.guide_osc = Oscillator('sine', self.guide, BUFFER_SIZE)
 		self.guide_ch = pygame.mixer.Channel(0)
 		self.guide_ch.set_volume(0.9/2.0)
@@ -222,11 +224,16 @@ class Game:
 			return False
 
 		self.prev_steps.append(self.steps) #store, for unique intervals the first 6 levels
+		
 		# set min/max frequencies
 		self.max_freq = self.guide * 4 # maximum frequency
 		self.min_freq = self.guide - 20# minimum frequency 
+		
+		#set interval text
+		self.setIntervalText()
 
 	def setIntervalText(self):
+		""" Text to display the wanted interval """
 		font = pygame.font.Font(pygame.font.get_default_font(), 18)
 		img = font.render(self.intervals.at(self.steps), True, BLACK)
 		#interval surface gets made every time function is called, this is done during pauses in main loop. The inefficiency should not be a problem.
@@ -239,19 +246,17 @@ class Game:
 		""" draw screen """
 
 		self.back = (self.back[0], self.back[1], self.screen.blit(self.back[0], self.back[1]))
+		self.screen.blit(self.arrow[0], self.arrow[1])
 
 		self.screen.blit(self.knob[0], self.knob[1])
-		
-		self.screen.blit(self.arrow[0], self.arrow[1])
 
 		if not self.pause:
 			self.screen.blit(self.interval, (0, 70))
-			#self.screen.blit(self.instructions, (self.center[0] - self.instructions.get_rect().center[0], 285))
 			self.screen.blit(self.instructions, (0, 285))
-
 
 		#practise mode?
 		if self.practise is True:
+			#display tuner
 			goal = self.stepToFreq(self.steps, self.guide_osc.frequency())
 			cents = self.hertzToCents(goal, self.pitch)
 			self.tuner.update(cents)
@@ -273,7 +278,9 @@ class Game:
 		self.tuner = Tuner(self.path) #initiats at practise on, and stays.
 
 	def message(self):
-		""" Checks set frequency and displays a message"""
+		""" Checks current frequency (at the adjustable oscillator)
+			and sets a message to user
+		"""
 		font = pygame.font.Font(pygame.font.get_default_font(), 18)
 
 		goal = self.stepToFreq(self.steps, self.guide_osc.frequency())
@@ -290,7 +297,6 @@ class Game:
 		if cents > -self.acceptable_off and cents < self.acceptable_off:
 			self.level += 1;
 			self.setLevel(self.level)
-			self.setIntervalText()
 			self.guide_osc.set_frequency(self.guide)
 
 			msg = 'Well done! Just ' + str(round(cents,1)) + ' cents ' + off + '.'
@@ -312,6 +318,10 @@ class Game:
 		self.draw()
 
 	def run(self):
+		""" main game loop.
+			Always starts from level 1, and reinits the oscillators/audio channels 
+		"""
+
 		if self.running:
 			return False
 		self.running = True
@@ -331,7 +341,7 @@ class Game:
 				mx,my = pygame.mouse.get_pos()
 				keystate = pygame.key.get_pressed()
 
-				#speed increase frequency
+				#fast increase frequency
 				if keystate[K_UP]:
 					if self.pitch < self.max_freq:
 						self.pitch += 1.6#*= 1.01
@@ -339,7 +349,7 @@ class Game:
 						degrees += 1.3
 						self.knob[0].rotate(degrees)
 
-				#speed decrease frequency
+				#fast decrease frequency
 				elif keystate[K_DOWN]:
 					if self.pitch > self.min_freq:
 						self.pitch -= 1.6#/= 1.01
@@ -419,10 +429,6 @@ class Game:
 			rand = random.randint(low, high)
 		return rand
 
-	def centsOff(self):
-		""" how many cents between two frequencies """
-		pass
-
 	def stepToFreq(self, step, frequency=False):
 		""" returns a frequncy scale or a new frequency
 
@@ -468,8 +474,6 @@ class Game:
 		except:
 			return 'Error. Could not identify note'
 
-	def textCenterX(self, font, str):
-		return font.size(str)[0]/2
 
 
 
