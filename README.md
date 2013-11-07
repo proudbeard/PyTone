@@ -9,7 +9,10 @@ Adjust a tone to a perfect interval.
 
 Installation
 ======
-Make sure numpy is installed
+Install pygame 1.9.2
+http://www.pygame.org/download.shtml
+
+Install numpy
 http://www.numpy.org/
 
 run $ python pytone.py
