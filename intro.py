@@ -50,7 +50,7 @@ class Intro:
 
 		for i in range(2):
 			knob = Knob(img)
-			knob.set_shadow((-6,-4), 150, 25)
+			#knob.set_shadow((-6,-4), 150, 25)
 			self.knobs.append(knob)
 
 		#the two diffrent plates in a pattern
