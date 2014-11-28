@@ -117,7 +117,7 @@ class Game:
 
 		self.knob = Knob(img)
 		self.knob.set_plate(self.plate)
-		self.knob.set_shadow((-6,-4), 150, 25)
+		#self.knob.set_shadow((-6,-4), 150, 25)
 		knb_center = self.knob.get_rect().center
 		self.knob = (self.knob, (self.center[0]-knb_center[0], self.center[1]-knb_center[1])) # also stores knob.rect at blit time		
 		
