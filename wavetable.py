@@ -12,9 +12,6 @@ import numpy
 class WaveTable:
 	""" 
 		Wave tables in numpy array.
-		Currently only supporty sine and square tables.
-
-		TODO: Fix square wave pulse
 	"""
 	m_amp = 0
 	m_scale = 2.0 * numpy.pi
@@ -44,9 +41,9 @@ class WaveTable:
 		elif table == 'square':
 			self.square()
 		else:
-			print "invalid table type"
-			#TODO: throw exception?
+			self.sine() #default
 
+	#make sine table
 	def sine(self):
 		_max = 0
 		for i in range(self.m_rate):
@@ -54,17 +51,21 @@ class WaveTable:
 			if self.m_table[i] > _max:
 				_max = self.m_table[i]
 
+	#make square table
 	def square(self):
 		arr = []
 		for i in range(self.m_rate):
 			self.m_table[i] = int(self.m_amp * numpy.sign(numpy.sin(self.m_scale * i/float(self.m_rate)) + self.m_offset))
 
+	#returns current sample rate
 	def sampleRate(self):
 		return self.m_rate
 
+	#returns used data type
 	def dataType(self):
 		return self.m_table.dtype
 
+	#change wave form
 	def changeWave(self, table):
 		if table == 'sine':
 			self.sine()
@@ -73,12 +74,13 @@ class WaveTable:
 		else:
 			print "invalid table type"
 
+	#returns current wave table
 	def table(self):
 		return self.m_table
 
+	#wave table element access
 	def at(self, idx):
 		try:
 			return self.m_table[idx]
 		except:
 			print "WaveTable array out of range: " + str(idx)
-			#TODO: throw exception?
