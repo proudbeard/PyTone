@@ -59,7 +59,7 @@ class Gradient( pygame.Surface ):
     def draw(self):
         screen = pygame.display.get_surface()
         screen.blit(self,(0,0))
-        pygame.display.flip() #flippin here as well
+        pygame.display.flip() #flippin here as well to keep screen up to date
 
     def setColors(self, start, end):
         """ Sets start color and clears surface """
@@ -76,7 +76,7 @@ class Gradient( pygame.Surface ):
             time: fade time in milliseconds ( not very precise.... )
             end:    alpha end value
 
-            TODO: This needs some work, a nice curve for the fade and precise timing
+            TODO: Add curve for the fade and more precise timing
         """
         old_start = self.m_start
         old_end = self.m_end

@@ -15,7 +15,6 @@ class Oscillator:
 		Simple oscillator for pygame mixer.
 		This is ment to be used by repeatedly calling the getSamples() member function,
 		which will return a pygame Sound object with the length of the buffer size.
-		Please note that this requires the buffer size to be choosen with care.
 
 		TODO: Fix stereo compability
 	"""
@@ -48,6 +47,7 @@ class Oscillator:
 		self.m_table = WaveTable(wave, inits[0], inits[1])
 		self.m_frequency = freq
 
+	#returns a Sound object
 	def samples(self):
 		wanted = self.m_length
 		self.m_buffer = numpy.zeros(self.m_length, dtype=self.m_type)
@@ -81,7 +81,7 @@ class Oscillator:
 		return self.m_table.sampleRate()
 
 	def set_position(self, pos):
-		""" No need for error checking, since it's taken care of by samples() """
+		#No need for error checking, since it's taken care of by samples()
 		self.m_pos = pos
 
 	def position(self):

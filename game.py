@@ -48,15 +48,16 @@ class Game:
 	result = None # surface for result displaying
 
 
-	path = None
+	path = None #for resources
 
+	#GUI elements
 	knob = None
 	knob_rect = None
 	plate = None
 
-	running = False
+	running = False #state check
 
-	intevals = None
+	intevals = None #interval array
 	guide_osc = None # guide note oscillator
 	guide = None # guide_osc frequency
 	osc = None # user ajustable oscillator
@@ -66,11 +67,11 @@ class Game:
 
 
 	steps = 1 # number of musical notes. Level one starts at an octave
-	prev_steps = []
+	prev_steps = [] #stores old game settings
 	max_freq = 0 # 4 x base oscillator frequency (two octaves)
 	min_freq = 0 # bace oscillator frequency
 
-	level = 1
+	level = 1 #level
 
 	pause = False # pausing main loop
 

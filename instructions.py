@@ -73,10 +73,6 @@ class Instructions:
 		logo_pos = 339, 373
 		self.surfaces.append((font.render('PyTone', True, BLACK), logo_pos))
 
-
-
-		
-
 	def run(self):
 		self.screen.clear()
 		self.screen.blit(self.back[0], self.back[1])
@@ -91,10 +87,3 @@ class Instructions:
 				elif e.type == QUIT:
 					return False
 
-"""
-pygame.init()
-pygame.display.set_mode((400,400))
-grad = Gradient((400,400))
-instr = Instructions(grad, 'resources/')
-instr.run()
-"""
